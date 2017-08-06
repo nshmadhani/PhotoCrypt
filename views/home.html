@@ -1,0 +1,185 @@
+<html>
+   <head>
+      <title>PhotoCrypt</title>
+      <meta name="viewport" content="width=device-width,initial-scale=1.0">
+   </head>
+   <body>
+      <!-- Header -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="color:#4E342E;">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Please Set a Password</h4>
+            </div>
+            <div class="modal-body">
+              <div class="input-group">
+                  <input type="text" id ="key_input" class="form-control" placeholder="Enter Your Key"  />
+                  <span  class="input-group-btn" id="addon">
+                    <button class="btn btn-default" id="copy_button" data-clipboard-target="#key_input" style="padding-top:4%;padding-bottom:4%;">Copy</button>
+                  </span>
+             </div>
+             <input type="checkbox" id = "auto_generate_key" aria-label="..."> Auto Generate Key
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" onclick="validateKey();">Done.</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ul class="nav nav-tabs" style="margin-bottom:0px;background-color:#4E342E;font-size:20px;font-family: 'Abel', sans-serif;">
+         <li><a class="navbar-brand disable" style="color:#D7CCC8;font-size:24px;"><b> <span class="glyphicon glyphicon-qrcode"></span> PhotoCrypt</b></a></li>
+         <!--    <ul class="nav nav-tabs navbar-right" style="margin-right:0px;display:inline-flex;background-color:#4E342E;"> -->
+         <li class="navbar-right" style="margin-right:0px;color:black;">
+            <a class="ab" data-toggle="tab" href="#contactus" style="color:#D7CCC8;"><b> <span class="glyphicon glyphicon-bell"></span> Contact Us</b></a>
+         </li>
+         <li class="navbar-right" style="margin-right:0px;">
+            <a class="ab" data-toggle="tab" href="#decrypt" style="color:#D7CCC8;"><b> <span class="glyphicon glyphicon-edit"></span> Decrypt</b></a>
+         </li>
+         <li class="active navbar-right" style="margin-right:0px;">
+            <a class="ab" data-toggle="tab" href="#encrypt" style="color:#D7CCC8;"><b> <span class="glyphicon glyphicon-lock"></span> Encrypt</b></a>
+         </li>
+      </ul>
+      <!-- end of header -->
+      <!-- Content -->
+        <div class="tab-content">
+         <div id="encrypt" class="tab-pane fade in active">
+            <!-- menu 1 -->
+            <div class="row" style="margin-right:0px;">
+               <div class="col-sm-6" style="background-color:#EFEBE9;padding:30px;height:90% ;">
+                  <div class="form-group">
+                     <form id='uploadForm' action = "/encrypt" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault();toggleModal();" >
+                        <label for="comment" style="font-size:30px;font-family: 'Asap', sans-serif;color:#4E342E;"><span class="glyphicon glyphicon-envelope"></span> Message:</label>
+                        <textarea class="form-control" rows="10" id="msg-area" style="resize:none;" placeholder="Type a message..."></textarea>                 <br>
+                        <label class="btn btn-default">
+                          <span class="glyphicon glyphicon-paperclip"></span> Browse <input type="file" id="encrypt-file-select" hidden  onchange="readURL(this,'img_preview');">
+                        </label>
+                        <label class ="btn btn-default">
+                          <span class="glyphicon glyphicon-lock "></span> Encrypt <input type='submit' hidden>
+                        </label>
+                      </form>
+                     <br>
+                  </div>
+                  <!--
+                  <div style="color:#4E342E;font-family: 'Cuprum', sans-serif;font-size:20px;"><b>Please wait <span class="glyphicon glyphicon-time"></span> :</b></div>
+                  <div class="progress progress-striped" style="margin-top:5px;">
+                     <div class="progress-bar progress-bar-custom active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                        <span>60% Complete</span>
+                     </div>
+                  </div>                -->
+        <div class="modal fade" id="downloadModal" role="dialog">
+            <div class="modal-dialog">
+      <!-- Modal content-->
+                <div class="modal-content" style="color:#4E342E;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Click below to download your encrypted image.</h4>
+                    </div>
+                    <div class="modal-body" >
+                         <div  id='download-area'></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+               <div class="col-sm-6" style="background-color:#EFEBE9;height:90% ;">
+                  <div class="container-fluid" style="margin:2%;height:80%">
+                     <center style="margin:1%;">
+                        <a class="preview" style="font-family: 'Abel', sans-serif;cursor: pointer;"> <span class="glyphicon glyphicon-eye-open"></span><b> Preview</b></a>
+                     </center>
+                     <img class="img-responsive img-thumbnail" src="pic.jpg" id='img_preview' alt="image not uploaded" width="100%"
+                          style='height: 100%; width: 100%; object-fit: contain'/>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- end of menu 1 -->
+         <div id="decrypt" class="tab-pane fade ">
+            <!-- menu 2 -->
+            <div class="row" style="margin-right:0px;">
+               <div class="col-sm-8" style="background-color:#EFEBE9;padding:10px;height:90% ;">
+                  <div class="container-fluid" style="margin:2%;height:80%">
+                     <center style="margin:1%;">
+                        <a class="preview" style="font-family: 'Abel', sans-serif;cursor: pointer;"> <span class="glyphicon glyphicon-eye-open"></span><b> Preview</b></a>
+                     </center>
+                     <center>
+                        <img class="img-responsive img-thumbnail" src="pic.jpg" alt="image not uploaded" width="100%" id='decrypt_img_preview' style='height: 100%; width: 100%; object-fit: contain'/>
+                     </center>
+                  </div>
+               </div>
+            <div class="col-sm-4" style="background-color:#EFEBE9;padding:30px;height:90%;">
+                  <div class="container-fluid">
+                     <div class="note-menu"><b>Note <span class="glyphicon glyphicon-alert"></span> : Upload the image only if, it is encrypted by photocrypt.esy.es</b></div>
+                     <center>
+                        <!--        <button class="btn" ><span class="glyphicon glyphicon glyphicon-upload "></span> Upload</button>
+                           <button class="btn" ><span class="glyphicon glyphicon glyphicon-wrench "></span> Decrypt</button>-->
+                     </center>
+                     <div class="container-fluid">
+                        <div class="form-group">
+                          <form id = 'decrypt_UploadForm' action='/decrypt' method="post" enctype="multipart/form-data" onsubmit="event.preventDefault();decrypt();">
+                           <label for="comment" style="font-size:24px;font-family: 'Asap', sans-serif;color:#4E342E;margin-top:10px;"><span class="glyphicon glyphicon glyphicon-pencil"></span> Decryption Key:</label>
+                           <textarea class="form-control" rows="0" id="decrypt_key_input" style="resize:none;" placeholder="Type the given key..."></textarea>
+                           <label class="btn btn-default" style="margin-top:20px;">
+                             <span class="glyphicon glyphicon-paperclip"></span> Browse <input type="file" id="decrypt-file-select" hidden  onchange="readURL(this,'decrypt_img_preview');">
+                           </label>
+                           <label class ="btn btn-default" style="margin-top:20px;">
+                             <span class="glyphicon  glyphicon-wrench"></span> Decrypt <input type='submit' hidden>
+                           </label>
+                           <br>
+                           <label for="comment" style="font-size:24px;font-family: 'Asap', sans-serif;color:#4E342E;margin-top:10px;">
+                             <span class="glyphicon glyphicon-envelope"></span> Decrypted Message:</label>
+                           <div id="decrypted-message"></div>
+                         </form>
+                       </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="container-fluid">
+            </div>
+         </div>
+         <!-- end of menu 2 -->
+         <div id="contactus" class="tab-pane fade">
+            <!-- menu 3 -->
+            <!-- Start of content -->
+
+            <div class="container">
+             <div class="col-sm-12" style="background-color:#EFEBE9;height:90% ;">
+               <div class="jumbotron" style="background-color:#EFEBE9;margin-top:3%;color:#4E342E">
+                  <h1>PhotoCrypt <span class="glyphicon glyphicon-qrcode"></span></h1>
+                  <p>PhotoCrypt helps you to <span class="glyphicon glyphicon-cloud-upload"></span> encrypt your secret or private <span class="glyphicon glyphicon-envelope"></span> message easily in an image and send it, in just few seconds ! <span class="glyphicon glyphicon-ok"></span></p>
+                  <p>Facing any kind of issues, you can mail us <span class="glyphicon glyphicon-share-alt"></span> feedbackphotocrypt.com</p>
+               </div>
+             </div>
+            </div>
+            <!-- end of content -->
+         </div>
+         <!-- end of menu 3 -->
+      </div>
+      <!-- end of content -->
+      <!-- footer -->
+      <nav class="navbar navbar-inverse navbar-static-top" style="background-color: #4E342E;">
+         <div class="container-fluid">
+            <div class="navbar-header">
+               <div class="navbar-brand-footer" style="color: #D7CCC8;font-family: 'Abel', sans-serif;">www.PhotoCrypt.esy.es</div>
+            </div>
+         </div>
+      </nav>
+      <!-- end of footer-->
+      <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <link href="css/style.css" rel="stylesheet">
+      <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+      <script src="javascript/jquery-3.2.1.min.js"></script>
+      <!--  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+      <script src="javascript/bootstrap.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+      <script src="javascript/upload.js"></script>
+      <!-- FONTS -->
+      <link href="https://fonts.googleapis.com/css?family=Comfortaa|ABeeZee|Abel|Abril+Fatface|Acme|Adamina|Advent+Pro|Aldrich|Alegreya|Alex+Brush|Alice|Allura|Amatic+SC|Antic|Arapey|Asap|Bad+Script|Bangers|Basic|BenchNine|Bree+Serif|Bubbler+One|Calligraffitti|Carme|Caveat|Ceviche+One|Changa|Chewy|Cinzel|Clicker+Script|Coda|Coming+Soon|Cookie|Copse|Cormorant+Garamond|Courgette|Crimson+Text|Crushed|Cuprum|Damion|Dancing+Script|Didact+Gothic|Dosis|Droid+Serif|Economica|Exo|Fira+Sans|Fjalla+One|Francois+One|Fredoka+One|Frijole|Gentium+Book+Basic|Graduate|Great+Vibes|Josefin+Sans|Julius+Sans+One|Kanit|Karla|Kaushan+Script|Libre+Baskerville|Lobster|Lobster+Two|Lora|Luckiest+Guy|Marcellus|Marcellus+SC|Marck+Script|Mogra|Monoton|Neucha|Neuton|Niconne|Nothing+You+Could+Do|Nunito|Old+Standard+TT|Oleo+Script|Open+Sans+Condensed:300|Oswald|PT+Sans|PT+Sans+Narrow|PT+Serif|Pacifico|Pathway+Gothic+One|Patrick+Hand|Patrick+Hand+SC|Paytone+One|Philosopher|Playball|Playfair+Display|Playfair+Display+SC|Poiet+One|Pontano+Sans|Prata|Quantico|Quattrocento|Questrial|Quicksand|Rambla|Roboto+Slab|Rochester|Rock+Salt|Sacramento|Satisfy|Shadows+Into+Light+Two|Sigmar+One|Sintony|Sorts+Mill+Goudy|Special+Elite|Spectral|Syncopate|Tangerine|Tinos|Titillium+Web|Ubuntu+Condensed|Ultra|Unica+One|Vibur|Vollkorn|Work+Sans|Yanone+Kaffeesatz|Yellowtail"
+         rel="stylesheet">
+   </body>
+</html>
