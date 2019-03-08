@@ -16,8 +16,6 @@
 
 ## Installation
 
-OS X & Linux:
-
 ```sh
 npm install 
 npm start 
